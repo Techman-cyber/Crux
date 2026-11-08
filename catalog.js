@@ -1,4 +1,5 @@
-export const CATS = ['Protect', 'Investigate', 'Media', 'Read', 'Page', 'Do more', 'Calculate', 'Text', 'Dev', 'Fun'];
+export const CATS = ['Protect', 'Investigate', 'Media', 'Read', 'Page', 'Do more', 'Calculate', 'Text', 'Dev', 'Fun', 'Image', 'PDF'];
+export const ORDER = [0, 1, 10, 11, 2, 3, 4, 5, 6, 7, 8, 9]; // display order of categories
 // cat = index in CATS, on = on by default, run = one-click action label, nosw = no on/off switch (action only)
 export const MODS = [
   { id: 'adblock', cat: 0, icon: '🚫', name: 'Ad blocker', tag: 'Blocks ad networks, hides ad slots, skips video ads', on: 1 },
@@ -49,5 +50,20 @@ export const MODS = [
   { id: 'print', cat: 4, icon: '🖨️', name: 'Print or save PDF', tag: 'Open print, choose Save as PDF', run: 'Print', nosw: 1 },
   { id: 'wellbeing', cat: 5, icon: '💧', name: 'Health reminders', tag: 'Eye breaks every 20 min, water and posture nudges' },
   { id: 'readlater', cat: 5, icon: '📚', name: 'Read later', tag: 'Save this page to a list for later', run: 'Save this page', nosw: 1 },
-  { id: 'laterlist', cat: 5, icon: '📖', name: 'Reading list', tag: 'Everything you saved to read later', run: 'Open list', nosw: 1 }
+  { id: 'laterlist', cat: 5, icon: '📖', name: 'Reading list', tag: 'Everything you saved to read later', run: 'Open list', nosw: 1 },
+  { id: 'bgremove', cat: 10, icon: '✂️', name: 'Background remover', tag: 'Cut out the background, keep it transparent', run: 'Open', nosw: 1, page: 'imgstudio.html?tool=bg' },
+  { id: 'eraser', cat: 10, icon: '🪄', name: 'Watermark and object remover', tag: 'Paint over a mark or object to fill it in', run: 'Open', nosw: 1, page: 'imgstudio.html?tool=erase' },
+  { id: 'redact', cat: 10, icon: '🙈', name: 'Blur and pixelate', tag: 'Hide faces, plates and private details', run: 'Open', nosw: 1, page: 'imgstudio.html?tool=redact' },
+  { id: 'imgresize', cat: 10, icon: '📐', name: 'Resize, crop, rotate', tag: 'Social presets, passport size, flip', run: 'Open', nosw: 1, page: 'imgstudio.html?tool=resize' },
+  { id: 'imgwm', cat: 10, icon: '©️', name: 'Add your watermark', tag: 'Stamp your name or logo on your photos', run: 'Open', nosw: 1, page: 'imgstudio.html?tool=wm' },
+  { id: 'imgadjust', cat: 10, icon: '🎚️', name: 'Photo adjust and filters', tag: 'Brightness, color, blur and one-tap looks', run: 'Open', nosw: 1, page: 'imgstudio.html?tool=adjust' },
+  { id: 'annotate', cat: 10, icon: '✏️', name: 'Annotate image', tag: 'Arrows, boxes, text and hide-boxes', run: 'Open', nosw: 1, page: 'imgstudio.html?tool=annotate' },
+  { id: 'imgprivacy', cat: 10, icon: '🕵️', name: 'Photo privacy', tag: 'See and strip hidden location and camera data', run: 'Open', nosw: 1, page: 'imgstudio.html?tool=privacy' },
+  { id: 'imgcolors', cat: 10, icon: '🌈', name: 'Colors in image', tag: 'Pull a palette out of any picture', run: 'Open', nosw: 1, page: 'imgstudio.html?tool=palette' },
+  { id: 'shotedit', cat: 10, icon: '📸', name: 'Screenshot and edit', tag: 'Capture this page and open it in the editor', run: 'Capture', nosw: 1 },
+  { id: 'pdfmerge', cat: 11, icon: '🧷', name: 'Merge PDFs', tag: 'Combine files into one, in any order', run: 'Open', nosw: 1, page: 'pdftools.html?tool=merge' },
+  { id: 'pdfsplit', cat: 11, icon: '✂️', name: 'Split or extract pages', tag: 'Keep only the pages you need', run: 'Open', nosw: 1, page: 'pdftools.html?tool=extract' },
+  { id: 'pdfrotate', cat: 11, icon: '🔄', name: 'Rotate or delete pages', tag: 'Fix sideways scans, drop pages', run: 'Open', nosw: 1, page: 'pdftools.html?tool=rotate' },
+  { id: 'img2pdf', cat: 11, icon: '🖼️', name: 'Images to PDF', tag: 'Turn photos or scans into one PDF', run: 'Open', nosw: 1, page: 'pdftools.html?tool=img2pdf' },
+  { id: 'pdfstamp', cat: 11, icon: '🔢', name: 'PDF numbers and watermark', tag: 'Page numbers, DRAFT stamp, clear properties', run: 'Open', nosw: 1, page: 'pdftools.html?tool=stamp' }
 ];

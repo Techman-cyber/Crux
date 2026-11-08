@@ -20,7 +20,18 @@ async function syncRules() {
   chrome.alarms.create('tabsaver', { periodInMinutes: 1 });
   c.enabled.wellbeing ? chrome.alarms.create('wellbeing', { periodInMinutes: 20 }) : chrome.alarms.clear('wellbeing');
 }
+function menus() {
+  chrome.contextMenus.removeAll(() => { const m = (id, title, contexts) => chrome.contextMenus.create({ id, title, contexts });
+    m('img-bg', 'Remove background (CRUX)', ['image']); m('img-edit', 'Edit image in CRUX Image Studio', ['image']); m('img-lens', 'Search this image with Google Lens', ['image']); m('img-tineye', 'Search this image on TinEye', ['image']);
+    m('link-check', 'Check this link with CRUX', ['link']); m('link-qr', 'Make a QR code for this link', ['link']); m('page-track', 'Scan this site with Track', ['page']); m('page-later', 'Save page to CRUX reading list', ['page']); });
+}
+chrome.contextMenus.onClicked.addListener((i, t) => {
+  const e = encodeURIComponent, ext = f => chrome.tabs.create({ url: chrome.runtime.getURL(f) });
+  ({ 'img-bg': () => ext('imgstudio.html?tool=bg&src=' + e(i.srcUrl)), 'img-edit': () => ext('imgstudio.html?tool=resize&src=' + e(i.srcUrl)), 'img-lens': () => chrome.tabs.create({ url: 'https://lens.google.com/uploadbyurl?url=' + e(i.srcUrl) }), 'img-tineye': () => chrome.tabs.create({ url: 'https://tineye.com/search?url=' + e(i.srcUrl) }),
+    'link-check': () => ext('check.html?url=' + e(i.linkUrl)), 'link-qr': () => ext('tools.html?tool=qr&text=' + e(i.linkUrl)), 'page-track': () => t && RUN.track(t), 'page-later': () => t && RUN.readlater(t) })[i.menuItemId]?.();
+});
 chrome.runtime.onInstalled.addListener(async () => {
+  menus();
   const { crux } = await chrome.storage.local.get('crux');
   if (!crux) await chrome.storage.local.set({ crux: DEF() });
   chrome.declarativeNetRequest.setExtensionActionOptions({ displayActionCountAsBadgeText: true });
@@ -59,6 +70,7 @@ async function fullshot(t) {
   await chrome.downloads.download({ url: 'data:image/jpeg;base64,' + b64(await blob.arrayBuffer()), filename: `CRUX/fullpage-${Date.now()}.jpg` });
 }
 const RUN = {
+  shotedit: async t => { const u = await chrome.tabs.captureVisibleTab(t.windowId, { format: 'png' }); await chrome.storage.session.set({ shot: u }); await page('imgstudio.html?tool=annotate&from=shot'); },
   fullshot, images: t => call(t, 'images'), notes: t => call(t, 'notes'), speed: t => call(t, 'speed'),
   cleaner: async t => { await chrome.browsingData.remove({ origins: [new URL(t.url).origin] }, { cookies: true, localStorage: true, indexedDB: true, cacheStorage: true, serviceWorkers: true, cache: true }); chrome.tabs.reload(t.id); },
   wayback: t => chrome.tabs.create({ url: 'https://web.archive.org/web/*/' + t.url }),

@@ -1,4 +1,4 @@
-import { MODS, CATS } from './catalog.js';
+import { MODS, CATS, ORDER } from './catalog.js';
 const $ = s => document.querySelector(s);
 const MODE = /hub\.html/.test(location.pathname) ? 'full' : /side\.html/.test(location.pathname) ? 'side' : 'popup', BIG = MODE !== 'popup';
 let cfg, tab, host = '', cat = -1, ALL = MODS, byId = {};
@@ -35,11 +35,11 @@ function paint() {
   const q = $('#q').value.toLowerCase(), on = sw().filter(m => cfg.enabled[m.id]).length, P = pins();
   const hit = m => (m.name + ' ' + m.tag).toLowerCase().includes(q), inCat = m => cat === -1 || (cat === -2 ? P.includes(m.id) : m.cat === cat);
   $('#sub').textContent = `${ALL.length} tools · ${on} of ${sw().length} switches on`; $('#pwr').classList.toggle('on', on === sw().length);
-  const cnt = i => ALL.filter(m => (i === -1 ? 1 : i === -2 ? P.includes(m.id) : m.cat === i)).length, names = [[-1, 'All'], [-2, '★ Pinned'], ...CATS.map((c, i) => [i, c])];
+  const cnt = i => ALL.filter(m => (i === -1 ? 1 : i === -2 ? P.includes(m.id) : m.cat === i)).length, names = [[-1, 'All'], [-2, '★ Pinned'], ...ORDER.map(i => [i, CATS[i]])];
   $('#pills').innerHTML = names.map(([i, c]) => `<button data-c="${i}" class="${i === cat ? 'on' : ''}">${c}</button>`).join('');
   if ($('#cats')) $('#cats').innerHTML = names.map(([i, c]) => `<button data-c="${i}" class="${i === cat ? 'on' : ''}">${c}<small>${cnt(i)}</small></button>`).join('');
   const list = ALL.filter(m => hit(m) && inCat(m)), rec = (cfg.prefs.recent || []).map(id => byId[id]).filter(Boolean).slice(0, 6);
-  $('#grid').innerHTML = BIG && cat === -1 && !q ? sec('★ Pinned', P.map(id => byId[id]).filter(Boolean)) + sec('Recently used', rec) + CATS.map((c, i) => sec(c, ALL.filter(m => m.cat === i))).join('') : list.map(tile).join('') || `<p class="mu" style="grid-column:1/-1">${cat === -2 ? 'Nothing pinned yet. Tap ☆ on any tool to keep it here.' : 'No tool matches that.'}</p>`;
+  $('#grid').innerHTML = BIG && cat === -1 && !q ? sec('★ Pinned', P.map(id => byId[id]).filter(Boolean)) + sec('Recently used', rec) + ORDER.map(i => sec(CATS[i], ALL.filter(m => m.cat === i))).join('') : list.map(tile).join('') || `<p class="mu" style="grid-column:1/-1">${cat === -2 ? 'Nothing pinned yet. Tap ☆ on any tool to keep it here.' : 'No tool matches that.'}</p>`;
   $('#bar').checked = cfg.bar !== false;
 }
 document.addEventListener('change', e => { const id = e.target.dataset.id; if (id) { cfg.enabled[id] = e.target.checked; save(); paint(); } });
@@ -49,6 +49,7 @@ document.addEventListener('click', async e => {
   if (d.pin) { const P = pins(); cfg.prefs.pins = P.includes(d.pin) ? P.filter(x => x !== d.pin) : [d.pin, ...P]; save(); paint(); return; }
   if (!d.run) return; const m = byId[d.run];
   cfg.prefs.recent = [m.id, ...(cfg.prefs.recent || []).filter(x => x !== m.id)].slice(0, 12); save();
+  if (m.page) { await chrome.runtime.sendMessage({ type: 'open', page: m.page }); if (BIG) b.textContent = 'Opened ✔'; else window.close(); return; }
   if (m.id === 'copylink') { const u = new URL(tab.url); ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'fbclid', 'gclid', 'igshid'].forEach(k => u.searchParams.delete(k)); await navigator.clipboard.writeText(`[${tab.title}](${u.href})`); b.textContent = 'Markdown link copied ✔'; return; }
   const r = await chrome.runtime.sendMessage({ type: 'run', mod: m.tool ? 'toolbox' : m.id, tool: m.tool, tabId: tab?.id });
   if (r && r.ok === false) { b.textContent = 'Not on this page'; return; }
