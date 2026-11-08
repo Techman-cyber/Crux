@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><title>CRUX Tab manager</title><link rel="stylesheet" href="ui.css">
 <style>.t{display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:center;padding:7px 10px;border-bottom:1px dashed var(--line)}.t img{width:16px;height:16px}.t b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.t small{color:var(--mu)}.t button{padding:2px 9px;font-size:12.5px}.t.act{background:#8b3dff22}.fl{font-size:11px;color:var(--warn)}h3{margin:18px 0 6px}.st{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line)}</style></head><body><div class="wrap">
-<div class="brand"><img src="logo.png" alt=""><b>TABS</b><span id="ct"></span></div>
+<div class="brand"><img src="logo.png" alt=""><b>TABS</b><span id="ct"></span><span style="flex:1"></span><a class="btn" href="later.html">Reading list</a></div>
 <div class="row" style="margin-bottom:14px"><input id="q" class="grow" placeholder="Search tabs by title or address"><button id="dd">Close duplicates</button><button id="mu">Mute all others</button><button id="sw" class="pri">Stash this window</button></div>
 <div class="card" id="list"></div><h3>Stashed sessions</h3><div class="card" id="stash"></div></div><script src="tabs.js"></script></body></html>

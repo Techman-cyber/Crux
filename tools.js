@@ -67,8 +67,8 @@ function generic() {
   const go = async () => { $('#o').value = await fn($('#i').value, modes ? $('#m').value : ''); }; $('#i').oninput = go; if (modes) $('#m').onchange = go; $('#cp').onclick = () => navigator.clipboard.writeText($('#o').value); if (q.get('text') && cur === 'url') $('#i').value = q.get('text'); go();
 }
 function calcUI() {
-  const [fs, fn] = CALC[cur]; out(`<div class="card"><div class="g2">${fs.map(([l, d, t, o], i) => `<div><label for="f${i}">${l}</label>${o ? `<select id="f${i}">${o.map(x => `<option ${x == d ? 'selected' : ''}>${x}</option>`).join('')}</select>` : `<input id="f${i}" type="${t === 'date' ? 'date' : 'number'}" value="${d}" step="any">`}</div>`).join('')}</div></div><div class="card res" id="r"></div>`);
-  const go = () => { const v = fs.map((_, i) => { const x = $('#f' + i); return x.type === 'date' || x.tagName === 'SELECT' ? x.value : +x.value; }); $('#r').textContent = fn(v); }; fs.forEach((_, i) => ($('#f' + i).oninput = go)); go();
+  const [fs, fn] = CALC[cur]; out(`<div class="card"><div class="g2">${fs.map(([l, d, t, o], i) => `<div><label for="f${i}">${l}</label>${o ? `<select id="f${i}">${o.map(x => `<option ${x == d ? 'selected' : ''}>${x}</option>`).join('')}</select>` : `<input id="f${i}" type="${t === 'date' || t === 'time' ? t : 'number'}" value="${d}" step="any">`}</div>`).join('')}</div></div><div class="card res" id="r"></div>`);
+  const go = () => { const v = fs.map((_, i) => { const x = $('#f' + i); return x.type === 'date' || x.type === 'time' || x.tagName === 'SELECT' ? x.value : +x.value; }); $('#r').textContent = fn(v); }; fs.forEach((_, i) => ($('#f' + i).oninput = go)); go();
 }
 const SP = {
   calc() { out('<input id="e" placeholder="e.g. (12.5 + 7) × 3 ^ 2 / sqrt(16)" style="font-size:20px"><div class="card"><div class="big" id="r">0</div><div class="mu">Supports + − × ÷ ^ % ( ) sqrt sin cos tan log ln abs pi e</div></div>'); $('#e').oninput = () => { try { const v = evalExpr($('#e').value); $('#r').textContent = f(v); } catch { $('#r').textContent = '…'; } }; $('#e').focus(); },

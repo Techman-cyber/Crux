@@ -1,7 +1,7 @@
 body{width:460px;min-height:0;background:#0a0615;margin:0;padding-bottom:10px}
 header{display:flex;align-items:center;gap:12px;padding:14px 16px 8px}header img{width:42px;height:42px;filter:drop-shadow(0 0 10px #8b3dff)}
 .ti b{display:block;font-size:20px;letter-spacing:.28em;line-height:1.1}.ti small{color:var(--mu);font-size:12px}
-.pwr{margin-left:auto;display:flex;align-items:center;gap:8px;padding:5px 12px;border-radius:99px;font-weight:700}.pwr span{width:9px;height:9px;border-radius:50%;background:#5b4a85}.pwr.on span{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+#full{margin-left:auto}.ib{padding:5px 10px}.pwr{margin-left:0;display:flex;align-items:center;gap:8px;padding:5px 12px;border-radius:99px;font-weight:700}.pwr span{width:9px;height:9px;border-radius:50%;background:#5b4a85}.pwr.on span{background:var(--ok);box-shadow:0 0 8px var(--ok)}
 .hero{display:flex;align-items:center;gap:12px;margin:6px 16px 10px;padding:12px 14px;border-radius:14px;background:linear-gradient(120deg,#2a1260,#14082b 70%);border:1px solid #5b2fc0}
 .hi{min-width:0;flex:1}.hi small{color:var(--la);letter-spacing:.2em;font-weight:800;font-size:11px}.hi b{display:block;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hi span{color:var(--mu);font-size:12px}
 .go{background:var(--vi);font-weight:700;padding:10px 16px;border-radius:12px;white-space:nowrap}.go:hover{background:#a064ff}

@@ -2,7 +2,7 @@ import { MODS } from './catalog.js';
 import { jobs } from './trackapi.js';
 import { decrypt, encrypt, importKey, b64 } from './vcrypto.js';
 
-const CS = ['core.js', 'm-cosmetic.js', 'm-ambient.js', 'm-access.js', 'm-links.js', 'm-vaultfill.js', 'm-extras.js', 'm-more.js'];
+const CS = ['core.js', 'm-cosmetic.js', 'm-ambient.js', 'm-access.js', 'm-links.js', 'm-vaultfill.js', 'm-extras.js', 'm-more.js', 'm-pro.js'];
 const RULESETS = { adblock: 'ads', trackers: 'trackers', cleanurls: 'clean', https: 'https' };
 const DEF = () => ({ enabled: Object.fromEntries(MODS.map(m => [m.id, !!m.on])), bar: true, paused: [], barOff: [], focus: [], tabMin: 20, lockMin: 10, prefs: {} });
 async function cfg() { const { crux } = await chrome.storage.local.get('crux'); const d = DEF(); return { ...d, ...crux, enabled: { ...d.enabled, ...(crux?.enabled || {}) } }; }
@@ -18,6 +18,7 @@ async function syncRules() {
   const old = (await chrome.declarativeNetRequest.getDynamicRules()).map(r => r.id);
   await chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: old, addRules: rules });
   chrome.alarms.create('tabsaver', { periodInMinutes: 1 });
+  c.enabled.wellbeing ? chrome.alarms.create('wellbeing', { periodInMinutes: 20 }) : chrome.alarms.clear('wellbeing');
 }
 chrome.runtime.onInstalled.addListener(async () => {
   const { crux } = await chrome.storage.local.get('crux');
@@ -61,6 +62,8 @@ const RUN = {
   fullshot, images: t => call(t, 'images'), notes: t => call(t, 'notes'), speed: t => call(t, 'speed'),
   cleaner: async t => { await chrome.browsingData.remove({ origins: [new URL(t.url).origin] }, { cookies: true, localStorage: true, indexedDB: true, cacheStorage: true, serviceWorkers: true, cache: true }); chrome.tabs.reload(t.id); },
   wayback: t => chrome.tabs.create({ url: 'https://web.archive.org/web/*/' + t.url }),
+  laterlist: () => page('later.html'),
+  readlater: async t => { const { later = [] } = await chrome.storage.local.get('later'); if (!later.some(x => x.url === t.url)) later.unshift({ title: t.title || t.url, url: t.url, t: Date.now() }); await chrome.storage.local.set({ later }); chrome.action.setBadgeBackgroundColor({ color: '#8b3dff' }); chrome.action.setBadgeText({ tabId: t.id, text: '✓' }); setTimeout(() => chrome.action.setBadgeText({ tabId: t.id, text: '' }), 1600); },
   tabs: () => page('tabs.html'), tempmail: () => page('tempmail.html'), forms: () => page('profile.html'),
   toolbox: (t, m) => chrome.tabs.create({ url: chrome.runtime.getURL('tools.html') + '?tool=' + encodeURIComponent(m?.tool || 'json') + '&text=' + encodeURIComponent(t?.url || '') }),
   quickclean: () => chrome.browsingData.remove({ since: Date.now() - 3600000 }, { cookies: true, cache: true, history: true, downloads: true, formData: true }),
@@ -75,8 +78,9 @@ const RUN = {
   shot: async t => { const u = await chrome.tabs.captureVisibleTab(t.windowId, { format: 'png' }); await chrome.downloads.download({ url: u, filename: `CRUX/screenshot-${Date.now()}.png` }); },
   tabsaver: () => discardIdle(0.5)
 };
-for (const id of ['volume', 'zap', 'comfort', 'autoscroll', 'pip', 'unlock', 'selection']) RUN[id] = t => call(t, id);
-chrome.commands.onCommand.addListener(async cmd => { if (cmd === 'run-track') { const [t] = await chrome.tabs.query({ active: true, currentWindow: true }); if (t) RUN.track(t); } });
+for (const id of ['volume', 'zap', 'comfort', 'autoscroll', 'pip', 'unlock', 'selection', 'inspect', 'fontinfo', 'ruler', 'print']) RUN[id] = t => call(t, id);
+chrome.commands.onCommand.addListener(async cmd => {
+  if (cmd === 'open-hub') { const [t] = await chrome.tabs.query({ active: true, currentWindow: true }); return chrome.tabs.create({ url: chrome.runtime.getURL('hub.html') + (t ? '?tab=' + t.id : '') }); } if (cmd === 'run-track') { const [t] = await chrome.tabs.query({ active: true, currentWindow: true }); if (t) RUN.track(t); } });
 
 /* ---------- link checker ---------- */
 async function chk(u) {
@@ -138,6 +142,11 @@ chrome.runtime.onMessage.addListener((m, s, send) => {
 });
 chrome.alarms.onAlarm.addListener(async a => {
   if (a.name === 'vlock') chrome.storage.session.remove('vk');
+  if (a.name === 'wellbeing') {
+    const c = await cfg(); if (!c.enabled.wellbeing) return; const { wb = 0 } = await chrome.storage.session.get('wb'), n = wb + 1; await chrome.storage.session.set({ wb: n });
+    const msg = n % 3 === 0 ? ['Drink some water', 'It’s been an hour. A glass of water now keeps headaches away.'] : n % 2 === 0 ? ['Posture check', 'Shoulders down, back straight, feet flat. Stretch your neck for a few seconds.'] : ['20-20-20 eye break', 'Look at something 20 feet (6 m) away for 20 seconds.'];
+    chrome.notifications.create({ type: 'basic', iconUrl: 'icon128.png', title: msg[0], message: msg[1] });
+  }
   if (a.name === 'pomo') {
     const p = (await chrome.storage.local.get('pomo')).pomo, c = await cfg(); if (!p) return;
     if (p.phase === 'work') { const end = Date.now() + p.brk * 60000; await chrome.storage.local.set({ pomo: { ...p, phase: 'break', end } }); chrome.alarms.create('pomo', { when: end }); c.enabled.focus = false; await chrome.storage.local.set({ crux: c }); chrome.notifications.create({ type: 'basic', iconUrl: 'icon128.png', title: 'Focus session done', message: `Nice work. Take a ${p.brk} minute break. Distracting sites are open again.` }); }

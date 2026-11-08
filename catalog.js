@@ -42,5 +42,12 @@ export const MODS = [
   { id: 'tabs', cat: 5, icon: '🗂️', name: 'Tab manager', tag: 'Search, dedupe, mute, stash, restore tabs', run: 'Open', nosw: 1 },
   { id: 'tabsaver', cat: 5, icon: '💤', name: 'Tab saver', tag: 'Sleeps tabs you haven’t used', run: 'Free memory' },
   { id: 'focus', cat: 5, icon: '🎯', name: 'Focus and Pomodoro', tag: 'Blocks distractions on a timer', run: 'Open' },
-  { id: 'picker', cat: 5, icon: '🎨', name: 'Color picker', tag: 'Pick any color on screen', run: 'Pick color', nosw: 1 }
+  { id: 'picker', cat: 5, icon: '🎨', name: 'Color picker', tag: 'Pick any color on screen', run: 'Pick color', nosw: 1 },
+  { id: 'inspect', cat: 1, icon: '🔬', name: 'Page inspector', tag: 'SEO and accessibility audit of this page', run: 'Inspect', nosw: 1 },
+  { id: 'fontinfo', cat: 4, icon: '🔤', name: 'Style inspector', tag: 'Click text to see its font, size and color', run: 'Pick', nosw: 1 },
+  { id: 'ruler', cat: 4, icon: '📐', name: 'Pixel ruler', tag: 'Drag to measure anything on the page', run: 'Measure', nosw: 1 },
+  { id: 'print', cat: 4, icon: '🖨️', name: 'Print or save PDF', tag: 'Open print, choose Save as PDF', run: 'Print', nosw: 1 },
+  { id: 'wellbeing', cat: 5, icon: '💧', name: 'Health reminders', tag: 'Eye breaks every 20 min, water and posture nudges' },
+  { id: 'readlater', cat: 5, icon: '📚', name: 'Read later', tag: 'Save this page to a list for later', run: 'Save this page', nosw: 1 },
+  { id: 'laterlist', cat: 5, icon: '📖', name: 'Reading list', tag: 'Everything you saved to read later', run: 'Open list', nosw: 1 }
 ];

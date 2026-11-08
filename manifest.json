@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "CRUX: the all-in-one browser toolkit",
   "version": "1.0.0",
-  "description": "All-in-one toolkit with 90+ free tools: ad and tracker blocking, password vault, safety checks, Track, recorder, reading tools, dev toolbox, calculators and more. Smart popups ask before acting.",
-  "minimum_chrome_version": "111",
+  "description": "All-in-one toolkit with 135+ free tools: ad and tracker blocking, password vault, safety checks, Track, recorder, reading tools, page inspector, calculators and an 88-tool toolbox. Smart popups ask before acting.",
+  "minimum_chrome_version": "116",
   "permissions": [
     "activeTab",
     "scripting",
@@ -13,7 +13,8 @@
     "downloads",
     "notifications",
     "declarativeNetRequest",
-    "browsingData"
+    "browsingData",
+    "sidePanel"
   ],
   "host_permissions": [
     "<all_urls>"
@@ -44,6 +45,12 @@
         "default": "Alt+Shift+T"
       },
       "description": "Scan this site with Track"
+    },
+    "open-hub": {
+      "suggested_key": {
+        "default": "Alt+Shift+H"
+      },
+      "description": "Open CRUX full screen"
     }
   },
   "declarative_net_request": {
@@ -95,7 +102,8 @@
         "m-links.js",
         "m-vaultfill.js",
         "m-extras.js",
-        "m-more.js"
+        "m-more.js",
+        "m-pro.js"
       ],
       "run_at": "document_start"
     }
@@ -112,5 +120,9 @@
         "<all_urls>"
       ]
     }
-  ]
+  ],
+  "side_panel": {
+    "default_path": "side.html"
+  },
+  "options_page": "hub.html"
 }
