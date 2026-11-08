@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>CRUX Vault</title><link rel="stylesheet" href="ui.css">
+<style>
+.lock{max-width:420px;margin:12vh auto 0;text-align:center}.lock img{width:92px;filter:drop-shadow(0 0 24px #8b3dff);animation:pulse 3.5s ease-in-out infinite}.lock .card{text-align:left;margin-top:18px}.lock p{color:var(--mu)}
+#err{color:var(--bad);min-height:20px;margin-top:8px}
+.top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.top input{max-width:320px}
+.aud{color:var(--mu);font-size:13px;margin-bottom:14px}
+.it{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:12px 14px;margin-bottom:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px}.it:hover{border-color:var(--vi)}
+.ic{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#8b3dff,#3b1580);display:grid;place-items:center;font-weight:800;font-size:18px}
+.it b{display:block}.it small{color:var(--mu)}.fl{font-size:11px;font-weight:700;margin-left:6px}.acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.acts button{padding:4px 10px;font-size:12.5px}
+dialog{background:var(--panel);color:var(--tx);border:1px solid var(--vi);border-radius:16px;padding:20px 22px;width:min(520px,94vw);box-shadow:0 0 50px #8b3dff55}dialog::backdrop{background:#000a}
+.bar{height:6px;border-radius:9px;background:#2a1850;margin-top:6px;overflow:hidden}.bar i{display:block;height:100%;width:0;transition:width .2s,background .2s}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}.opts label{color:var(--tx);margin:0;display:flex;gap:8px;align-items:center}
+.empty{text-align:center;color:var(--mu);padding:40px 0}
+</style></head><body>
+<section id="lock" class="lock" hidden><img src="logo.png" alt=""><h1 style="letter-spacing:.2em;margin-top:6px">CRUX VAULT</h1>
+<div class="card" id="create"><h3>Create your master password</h3><p>Everything is encrypted on this device with AES-256. We can’t recover this password, so choose one you’ll remember.</p><label for="p1">Master password</label><input id="p1" type="password" autocomplete="new-password"><label for="p2">Repeat it</label><input id="p2" type="password" autocomplete="new-password"><p><button id="mk" class="pri">Create vault</button></p></div>
+<div class="card" id="unlock" hidden><h3>Unlock</h3><label for="pu">Master password</label><input id="pu" type="password" autocomplete="current-password"><p><button id="un" class="pri">Unlock</button></p></div><div id="err" role="alert"></div></section>
+<div id="app" class="wrap" hidden>
+<div class="brand"><img src="logo.png" alt=""><b>VAULT</b><span class="grow"></span><button id="gb">Generator</button><button id="sb">Settings</button><button id="lk">Lock now</button></div>
+<div class="top"><input id="q" placeholder="Search your logins" aria-label="Search"><button id="add" class="pri">+ New login</button></div><div id="aud" class="aud"></div><div id="list"></div></div>
+<dialog id="ed"><h3 id="et">Login</h3><label for="t">Name</label><input id="t"><label for="u">Website</label><input id="u" placeholder="https://example.com"><label for="us">Username or email</label><input id="us" autocomplete="off">
+<label for="pw">Password</label><div class="row"><input id="pw" type="password" class="grow" autocomplete="new-password"><button id="sh" type="button">Show</button><button id="gn" type="button">Generate</button></div><div class="bar"><i id="sb2"></i></div><div class="mu" id="sl" style="font-size:12px;margin-top:4px"></div>
+<label for="n">Notes</label><textarea id="n" rows="3"></textarea><div class="row" style="margin-top:14px"><button id="sv" class="pri">Save</button><button id="br" type="button">Check for breaches</button><span class="grow"></span><button id="del" class="dng">Delete</button><button id="cx">Cancel</button></div><div id="bm" style="margin-top:8px;font-size:13px"></div></dialog>
+<dialog id="gd"><h3>Password generator</h3><input id="go" readonly style="font-family:ui-monospace,Menlo,monospace;margin-top:12px"><div class="bar"><i id="gb2"></i></div><div class="mu" id="gl" style="font-size:12px;margin:4px 0 10px"></div>
+<label>Length: <span id="glv">20</span></label><input id="gl2" type="range" min="8" max="64" value="20"><div class="opts" style="margin-top:10px"><label><input type="checkbox" id="g1" checked>a-z</label><label><input type="checkbox" id="g2" checked>A-Z</label><label><input type="checkbox" id="g3" checked>0-9</label><label><input type="checkbox" id="g4" checked>Symbols</label></div><div class="row" style="margin-top:14px"><button id="gr">Regenerate</button><button id="gc" class="pri">Copy</button><span class="grow"></span><button id="gx">Close</button></div></dialog>
+<dialog id="sd"><h3>Settings</h3><label for="lm">Auto-lock after (minutes)</label><input id="lm" type="number" min="1" max="240"><div class="row" style="margin-top:14px"><button id="cm">Change master password</button><button id="ex">Export encrypted backup</button><button id="im">Import backup or CSV</button></div><input id="fi" type="file" accept=".json,.csv" hidden><p class="mu" style="font-size:12.5px">Backups stay encrypted with the master password. CSV imports (Chrome, Bitwarden, etc.) are plain text, so delete that file after importing.</p><div class="row"><button id="wp" class="dng">Erase vault</button><span class="grow"></span><button id="sx">Close</button></div><div id="sm" style="margin-top:8px"></div></dialog>
+<script type="module" src="vault.js"></script></body></html>

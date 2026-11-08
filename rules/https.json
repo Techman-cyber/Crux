@@ -1,0 +1,1 @@
+[{"id": 1, "priority": 1, "action": {"type": "upgradeScheme"}, "condition": {"urlFilter": "|http://", "excludedRequestDomains": ["localhost", "127.0.0.1", "0.0.0.0"], "resourceTypes": ["main_frame", "sub_frame"]}}]
