@@ -19,7 +19,27 @@ function make(L) {
     if (strip) { d.setTitle(''); d.setAuthor(''); d.setSubject(''); d.setKeywords([]); d.setProducer(''); d.setCreator(''); }
     return d.save(); }
   async function info(buf) { const d = await load(buf); return { pages: d.getPageCount(), title: d.getTitle() || '', author: d.getAuthor() || '', producer: d.getProducer() || '', creator: d.getCreator() || '' }; }
-  return { parseRanges, pageCount, merge, extract, rotateDelete, imagesToPdf, stamp, info };
+  const clean = s => String(s ?? '').replace(/₹/g, 'Rs.');
+  const wrapText = (font, size, text, maxW) => { const out = []; for (const para of clean(text).split('\n')) { let l = ''; for (const w of para.split(/\s+/)) { const n = l ? l + ' ' + w : w; if (font.widthOfTextAtSize(n, size) > maxW && l) { out.push(l); l = w; } else l = n; } out.push(l); } return out; };
+  const money = (c, n) => `${c} ${Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  async function invoice(o) {
+    const d = await PDFDocument.create(), F = await d.embedFont(StandardFonts.Helvetica), B = await d.embedFont(StandardFonts.HelveticaBold), W = 595.28, H = 841.89, m = 48, ink = rgb(.1, .1, .15), acc = rgb(.42, .18, .82), grey = rgb(.4, .4, .45);
+    let p = d.addPage([W, H]), y = H - 56; const T = (t, x, yy, s = 10, f = F, c = ink) => p.drawText(clean(t), { x, y: yy, size: s, font: f, color: c }), R = (t, xr, yy, s = 10, f = F, c = ink) => T(t, xr - f.widthOfTextAtSize(clean(t), s), yy, s, f, c);
+    T('INVOICE', m, y, 28, B, acc); R(`No. ${o.number || '1'}`, W - m, y + 4, 13, B); y -= 18; R(`Date: ${o.date || ''}`, W - m, y, 10, F, grey); if (o.due) { y -= 13; R(`Due: ${o.due}`, W - m, y, 10, F, grey); }
+    y -= 34; const yb = y; T('FROM', m, y, 8.5, B, acc); T('BILL TO', W / 2, y, 8.5, B, acc); y -= 14; let ya = y; wrapText(F, 10, o.from || '', 230).forEach(l => { T(l, m, ya); ya -= 13; }); let yc = y; wrapText(F, 10, o.to || '', 230).forEach(l => { T(l, W / 2, yc); yc -= 13; }); y = Math.min(ya, yc) - 22;
+    const head = () => { p.drawRectangle({ x: m, y: y - 6, width: W - 2 * m, height: 22, color: rgb(.95, .93, .99) }); T('Description', m + 8, y, 9, B); R('Qty', 380, y, 9, B); R('Price', 460, y, 9, B); R('Amount', W - m - 8, y, 9, B); y -= 26; }; head();
+    let sub = 0; for (const it of o.items) { const q = +it.qty || 0, pr = +it.price || 0, amt = q * pr, ls = wrapText(F, 10, it.desc || '', 270); if (y - ls.length * 13 < 140) { p = d.addPage([W, H]); y = H - 60; head(); } sub += amt; ls.forEach((l, i) => T(l, m + 8, y - i * 13)); R(String(q), 380, y); R(money('', pr).trim(), 460, y); R(money('', amt).trim(), W - m - 8, y); y -= Math.max(1, ls.length) * 13 + 7; p.drawLine({ start: { x: m, y: y + 9 }, end: { x: W - m, y: y + 9 }, thickness: .4, color: rgb(.85, .85, .9) }); }
+    if (y < 150) { p = d.addPage([W, H]); y = H - 60; } const tax = sub * (+o.tax || 0) / 100, cur = o.currency || ''; y -= 8; const row = (l, v, bold) => { R(l, 440, y, bold ? 12 : 10, bold ? B : F); R(money(cur, v), W - m - 8, y, bold ? 12 : 10, bold ? B : F); y -= bold ? 22 : 16; }; row('Subtotal', sub); if (+o.tax) row(`Tax (${o.tax}%)`, tax); p.drawLine({ start: { x: 330, y: y + 10 }, end: { x: W - m, y: y + 10 }, thickness: 1, color: acc }); y -= 6; row('TOTAL', sub + tax, true);
+    if (o.notes) { y -= 14; T('NOTES', m, y, 8.5, B, acc); y -= 14; wrapText(F, 9.5, o.notes, W - 2 * m).forEach(l => { if (y < 60) { p = d.addPage([W, H]); y = H - 60; } T(l, m, y, 9.5, F, grey); y -= 12.5; }); }
+    d.setTitle(`Invoice ${o.number || ''}`); d.setProducer('CRUX'); return d.save(); }
+  async function resume(o) {
+    const d = await PDFDocument.create(), F = await d.embedFont(StandardFonts.Helvetica), B = await d.embedFont(StandardFonts.HelveticaBold), W = 595.28, H = 841.89, m = 50, w = W - 2 * m, ink = rgb(.1, .1, .12), acc = rgb(.2, .2, .45);
+    let p = d.addPage([W, H]), y = H - 58; const T = (t, x, yy, s = 10, f = F, c = ink) => p.drawText(clean(t), { x, y: yy, size: s, font: f, color: c }), room = n => { if (y - n < 50) { p = d.addPage([W, H]); y = H - 55; } };
+    T(o.name || 'Your Name', m, y, 24, B); y -= 20; if (o.title) { T(o.title, m, y, 12.5, F, acc); y -= 16; } if (o.contact) { wrapText(F, 9.5, o.contact, w).forEach(l => { T(l, m, y, 9.5, F, rgb(.35, .35, .4)); y -= 13; }); } y -= 8;
+    const sec = (head, text, bullets = true) => { if (!String(text || '').trim()) return; room(50); T(head.toUpperCase(), m, y, 10.5, B, acc); y -= 5; p.drawLine({ start: { x: m, y }, end: { x: W - m, y }, thickness: .8, color: acc }); y -= 15;
+      for (const raw of clean(text).split('\n')) { const l = raw.trim(); if (!l) { y -= 5; continue; } if (/^[-•*]\s+/.test(l)) { const ls = wrapText(F, 10, l.replace(/^[-•*]\s+/, ''), w - 16); room(ls.length * 13); T('•', m + 3, y); ls.forEach((x, i) => { T(x, m + 14, y); y -= 13; }); } else { const ls = wrapText(raw.startsWith(' ') ? F : B, 10.5, l, w); room(ls.length * 14); ls.forEach(x => { T(x, m, y, 10.5, B); y -= 14; }); } } y -= 8; };
+    sec('Summary', o.summary); sec('Experience', o.experience); sec('Education', o.education); sec('Skills', o.skills); sec('Projects and other', o.other); d.setTitle(`${o.name || 'Resume'}`); d.setProducer('CRUX'); return d.save(); }
+  return { parseRanges, pageCount, merge, extract, rotateDelete, imagesToPdf, stamp, info, invoice, resume };
 }
 G.makePdf = make; if (typeof module !== 'undefined') module.exports = make;
 })(typeof window !== 'undefined' ? window : globalThis);

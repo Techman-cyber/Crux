@@ -54,7 +54,7 @@ const ZONES = ['America/Los_Angeles', 'America/New_York', 'America/Sao_Paulo', '
 const HTTP = { 200: 'OK', 201: 'Created', 204: 'No Content', 301: 'Moved Permanently', 302: 'Found (temporary redirect)', 304: 'Not Modified', 400: 'Bad Request', 401: 'Unauthorized (login needed)', 403: 'Forbidden', 404: 'Not Found', 405: 'Method Not Allowed', 408: 'Request Timeout', 409: 'Conflict', 410: 'Gone', 418: 'I’m a teapot', 429: 'Too Many Requests', 500: 'Internal Server Error', 502: 'Bad Gateway', 503: 'Service Unavailable', 504: 'Gateway Timeout' };
 const out = h => ($('#main').innerHTML = h);
 async function init() {
-  TB = await (await fetch('tb.json')).json(); drawNav(); draw();
+  TB = await (await fetch('tb.json')).json(); document.querySelector('.brand span').textContent = `${TB.length} free tools · most work offline`; drawNav(); draw();
   $('#qs').oninput = drawNav;
 }
 function drawNav() { const s = $('#qs').value.toLowerCase(); let last = ''; $('#nav').innerHTML = TB.filter(t => (t[2] + t[3]).toLowerCase().includes(s)).map(t => (t[4] !== last ? (last = t[4], `<h4>${t[4].toUpperCase()}</h4>`) : '') + `<button data-k="${t[0]}" class="${t[0] === cur ? 'on' : ''}">${t[1]} ${esc(t[2])}</button>`).join(''); }

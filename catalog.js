@@ -1,5 +1,5 @@
-export const CATS = ['Protect', 'Investigate', 'Media', 'Read', 'Page', 'Do more', 'Calculate', 'Text', 'Dev', 'Fun', 'Image', 'PDF'];
-export const ORDER = [0, 1, 10, 11, 2, 3, 4, 5, 6, 7, 8, 9]; // display order of categories
+export const CATS = ['Protect', 'Investigate', 'Media', 'Read', 'Page', 'Do more', 'Calculate', 'Text', 'Dev', 'Fun', 'Image', 'PDF', 'Health', 'Study', 'Life'];
+export const ORDER = [0, 1, 10, 11, 2, 3, 4, 5, 6, 12, 13, 14, 7, 8, 9]; // display order of categories
 // cat = index in CATS, on = on by default, run = one-click action label, nosw = no on/off switch (action only)
 export const MODS = [
   { id: 'adblock', cat: 0, icon: '🚫', name: 'Ad blocker', tag: 'Blocks ad networks, hides ad slots, skips video ads', on: 1 },
@@ -65,5 +65,18 @@ export const MODS = [
   { id: 'pdfsplit', cat: 11, icon: '✂️', name: 'Split or extract pages', tag: 'Keep only the pages you need', run: 'Open', nosw: 1, page: 'pdftools.html?tool=extract' },
   { id: 'pdfrotate', cat: 11, icon: '🔄', name: 'Rotate or delete pages', tag: 'Fix sideways scans, drop pages', run: 'Open', nosw: 1, page: 'pdftools.html?tool=rotate' },
   { id: 'img2pdf', cat: 11, icon: '🖼️', name: 'Images to PDF', tag: 'Turn photos or scans into one PDF', run: 'Open', nosw: 1, page: 'pdftools.html?tool=img2pdf' },
-  { id: 'pdfstamp', cat: 11, icon: '🔢', name: 'PDF numbers and watermark', tag: 'Page numbers, DRAFT stamp, clear properties', run: 'Open', nosw: 1, page: 'pdftools.html?tool=stamp' }
+  { id: 'pdfstamp', cat: 11, icon: '🔢', name: 'PDF numbers and watermark', tag: 'Page numbers, DRAFT stamp, clear properties', run: 'Open', nosw: 1, page: 'pdftools.html?tool=stamp' },
+  { id: 'meme', cat: 10, icon: '😂', name: 'Meme maker', tag: 'Add top and bottom text to any picture', run: 'Open', nosw: 1, page: 'maker.html?tool=meme' },
+  { id: 'textgfx', cat: 10, icon: '🖋️', name: 'Quote and banner maker', tag: 'Quote cards, stories, thumbnails, banners', run: 'Open', nosw: 1, page: 'maker.html?tool=textgfx' },
+  { id: 'avatar', cat: 10, icon: '🧑‍🎨', name: 'Avatar generator', tag: 'Initials, pixel and gradient avatars', run: 'Open', nosw: 1, page: 'maker.html?tool=avatar' },
+  { id: 'placeholder', cat: 10, icon: '🔲', name: 'Placeholder image', tag: 'Any size, any color', run: 'Open', nosw: 1, page: 'maker.html?tool=placeholder' },
+  { id: 'wallpaper', cat: 10, icon: '🌌', name: 'Wallpaper maker', tag: 'Gradient wallpapers for phone and desktop', run: 'Open', nosw: 1, page: 'maker.html?tool=wallpaper' },
+  { id: 'barcode', cat: 10, icon: '▥', name: 'Barcode generator', tag: 'Code 128 barcodes', run: 'Open', nosw: 1, page: 'maker.html?tool=barcode' },
+  { id: 'collage', cat: 10, icon: '🧩', name: 'Photo collage', tag: 'Combine photos into one grid', run: 'Open', nosw: 1, page: 'maker.html?tool=collage' },
+  { id: 'passport', cat: 10, icon: '🪪', name: 'Passport photo sheet', tag: 'Print-ready sheets of passport photos', run: 'Open', nosw: 1, page: 'maker.html?tool=passport' },
+  { id: 'favicon', cat: 10, icon: '⭐', name: 'Favicon and app icons', tag: 'Every icon size in one zip', run: 'Open', nosw: 1, page: 'maker.html?tool=favicon' },
+  { id: 'effects', cat: 10, icon: '🎭', name: 'Photo effects and ASCII', tag: 'Pixel art, sketch, cartoon, duotone, ASCII', run: 'Open', nosw: 1, page: 'maker.html?tool=effects' },
+  { id: 'imagine', cat: 10, icon: '🤖', name: 'AI image generator', tag: 'Describe it and get a picture (free)', run: 'Open', nosw: 1, page: 'imagine.html' },
+  { id: 'invoice', cat: 11, icon: '🧾', name: 'Invoice maker', tag: 'Make a clean PDF invoice', run: 'Open', nosw: 1, page: 'pdftools.html?tool=invoice' },
+  { id: 'resume', cat: 11, icon: '📄', name: 'Resume maker', tag: 'Simple ATS-friendly resume PDF', run: 'Open', nosw: 1, page: 'pdftools.html?tool=resume' }
 ];
