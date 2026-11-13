@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "CRUX: the all-in-one browser toolkit",
   "version": "1.0.0",
-  "description": "All-in-one toolkit with 209+ free tools: ad and tracker blocking, password vault, safety checks, Track, background and watermark remover, AI image generator, image and PDF tools, recorder, reading tools, calculators, trackers and a 132-tool toolbox. Smart popups ask before acting.",
+  "description": "All-in-one toolkit with 222+ free tools: ad and tracker blocking, password vault, safety checks, Track, ambient glow, image, video and PDF studios, AI image generator, Market Coach, recorder, reading tools, calculators and more. Smart popups ask before acting.",
   "minimum_chrome_version": "116",
   "permissions": [
     "activeTab",

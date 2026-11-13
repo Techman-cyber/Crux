@@ -53,6 +53,7 @@ async function discardIdle(min) {
     if (/^https?:/.test(t.url || '') && now - (t.lastAccessed || now) > min * 60000) try { await chrome.tabs.discard(t.id); } catch {}
 }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const cap = async t => { if (!t.active) { await chrome.tabs.update(t.id, { active: true }); await sleep(550); } return chrome.tabs.captureVisibleTab(t.windowId, { format: 'png' }); };
 async function fullshot(t) {
   const ex = (func, args = []) => chrome.scripting.executeScript({ target: { tabId: t.id }, func, args }).then(r => r[0].result);
   const d = await ex(() => ({ h: Math.max(document.documentElement.scrollHeight, document.body.scrollHeight), vh: innerHeight, w: innerWidth, dpr: devicePixelRatio, y: scrollY }));
@@ -60,7 +61,7 @@ async function fullshot(t) {
   for (let i = 0; i < steps; i++) {
     const y = Math.min(i * d.vh, d.h - d.vh);
     await ex(y => scrollTo({ top: y, behavior: 'instant' }), [y]); await sleep(i ? 600 : 350);
-    shots.push({ y, url: await chrome.tabs.captureVisibleTab(t.windowId, { format: 'png' }) });
+    shots.push({ y, url: await cap(t) });
     if (i === 0) await ex(() => { window.__cruxFx = []; document.querySelectorAll('body *').forEach(e => { const p = getComputedStyle(e).position; if (p === 'fixed' || p === 'sticky') { window.__cruxFx.push([e, e.style.visibility]); e.style.visibility = 'hidden'; } }); });
   }
   await ex(y => { (window.__cruxFx || []).forEach(([e, v]) => (e.style.visibility = v)); scrollTo({ top: y, behavior: 'instant' }); }, [d.y]);
@@ -70,7 +71,9 @@ async function fullshot(t) {
   await chrome.downloads.download({ url: 'data:image/jpeg;base64,' + b64(await blob.arrayBuffer()), filename: `CRUX/fullpage-${Date.now()}.jpg` });
 }
 const RUN = {
-  shotedit: async t => { const u = await chrome.tabs.captureVisibleTab(t.windowId, { format: 'png' }); await chrome.storage.session.set({ shot: u }); await page('imgstudio.html?tool=annotate&from=shot'); },
+  market: () => page('market.html'),
+  marketshot: async t => { try { await chrome.storage.session.set({ mshot: await cap(t) }); } catch { } await page('market.html?tool=shot'); },
+  shotedit: async t => { const u = await cap(t); await chrome.storage.session.set({ shot: u }); await page('imgstudio.html?tool=annotate&from=shot'); },
   fullshot, images: t => call(t, 'images'), notes: t => call(t, 'notes'), speed: t => call(t, 'speed'),
   cleaner: async t => { await chrome.browsingData.remove({ origins: [new URL(t.url).origin] }, { cookies: true, localStorage: true, indexedDB: true, cacheStorage: true, serviceWorkers: true, cache: true }); chrome.tabs.reload(t.id); },
   wayback: t => chrome.tabs.create({ url: 'https://web.archive.org/web/*/' + t.url }),
@@ -87,7 +90,7 @@ const RUN = {
   vault: () => page('vault.html'), focus: () => page('focus.html'),
   recorder: () => chrome.windows.create({ url: 'recorder.html', type: 'popup', width: 540, height: 660 }),
   picker: () => chrome.windows.create({ url: 'picker.html', type: 'popup', width: 400, height: 360 }),
-  shot: async t => { const u = await chrome.tabs.captureVisibleTab(t.windowId, { format: 'png' }); await chrome.downloads.download({ url: u, filename: `CRUX/screenshot-${Date.now()}.png` }); },
+  shot: async t => { const u = await cap(t); await chrome.downloads.download({ url: u, filename: `CRUX/screenshot-${Date.now()}.png` }); },
   tabsaver: () => discardIdle(0.5)
 };
 for (const id of ['volume', 'zap', 'comfort', 'autoscroll', 'pip', 'unlock', 'selection', 'inspect', 'fontinfo', 'ruler', 'print']) RUN[id] = t => call(t, id);

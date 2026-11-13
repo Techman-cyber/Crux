@@ -1,5 +1,5 @@
-export const CATS = ['Protect', 'Investigate', 'Media', 'Read', 'Page', 'Do more', 'Calculate', 'Text', 'Dev', 'Fun', 'Image', 'PDF', 'Health', 'Study', 'Life'];
-export const ORDER = [0, 1, 10, 11, 2, 3, 4, 5, 6, 12, 13, 14, 7, 8, 9]; // display order of categories
+export const CATS = ['Protect', 'Investigate', 'Media', 'Read', 'Page', 'Do more', 'Calculate', 'Text', 'Dev', 'Fun', 'Image', 'PDF', 'Health', 'Study', 'Life', 'Markets', 'Video'];
+export const ORDER = [0, 1, 10, 16, 11, 15, 2, 3, 4, 5, 6, 12, 13, 14, 7, 8, 9]; // display order of categories
 // cat = index in CATS, on = on by default, run = one-click action label, nosw = no on/off switch (action only)
 export const MODS = [
   { id: 'adblock', cat: 0, icon: '🚫', name: 'Ad blocker', tag: 'Blocks ad networks, hides ad slots, skips video ads', on: 1 },
@@ -16,7 +16,7 @@ export const MODS = [
   { id: 'safecheck', cat: 1, icon: '🛡️', name: 'Site and file checker', tag: 'Warns on risky sites and downloads', on: 1, run: 'Open checker' },
   { id: 'linkcheck', cat: 1, icon: '🔗', name: 'Link checker', tag: 'Flags broken and suspicious links', run: 'Check links' },
   { id: 'wayback', cat: 1, icon: '🕰️', name: 'Time machine', tag: 'See old versions of this page', run: 'Open archive', nosw: 1 },
-  { id: 'ambient', cat: 2, icon: '🌈', name: 'Ambient glow', tag: 'Cinema lighting around YouTube videos', run: 'Toggle glow' },
+  { id: 'ambient', cat: 2, icon: '🌈', name: 'Ambient glow', tag: 'Cinema lighting with blur, light and dimming controls', run: 'Controls' },
   { id: 'recorder', cat: 2, icon: '🎥', name: 'Screen recorder', tag: 'Screen, window or tab, with audio', run: 'Record' },
   { id: 'shot', cat: 2, icon: '📸', name: 'Screenshot', tag: 'Save what you see as a PNG', run: 'Capture', nosw: 1 },
   { id: 'fullshot', cat: 2, icon: '📜', name: 'Full-page shot', tag: 'Capture the whole page', run: 'Capture', nosw: 1 },
@@ -78,5 +78,15 @@ export const MODS = [
   { id: 'effects', cat: 10, icon: '🎭', name: 'Photo effects and ASCII', tag: 'Pixel art, sketch, cartoon, duotone, ASCII', run: 'Open', nosw: 1, page: 'maker.html?tool=effects' },
   { id: 'imagine', cat: 10, icon: '🤖', name: 'AI image generator', tag: 'Describe it and get a picture (free)', run: 'Open', nosw: 1, page: 'imagine.html' },
   { id: 'invoice', cat: 11, icon: '🧾', name: 'Invoice maker', tag: 'Make a clean PDF invoice', run: 'Open', nosw: 1, page: 'pdftools.html?tool=invoice' },
-  { id: 'resume', cat: 11, icon: '📄', name: 'Resume maker', tag: 'Simple ATS-friendly resume PDF', run: 'Open', nosw: 1, page: 'pdftools.html?tool=resume' }
+  { id: 'resume', cat: 11, icon: '📄', name: 'Resume maker', tag: 'Simple ATS-friendly resume PDF', run: 'Open', nosw: 1, page: 'pdftools.html?tool=resume' },
+  { id: 'market', cat: 15, icon: '📊', name: 'Market Coach', tag: 'Analyze a stock: indicators, levels, risk plan, backtests', run: 'Analyze', nosw: 1 },
+  { id: 'marketshot', cat: 15, icon: '📸', name: 'Chart screenshot: what next?', tag: 'Capture a chart and get an educational read', run: 'Capture chart', nosw: 1 },
+  { id: 'marketrisk', cat: 15, icon: '🛡️', name: 'Position size and risk', tag: 'How much to buy so one loss stays small', run: 'Open', nosw: 1, page: 'market.html?tool=risk' },
+  { id: 'marketreal', cat: 15, icon: '🚩', name: 'Reality check', tag: 'Scam red flags and a pre-trade checklist', run: 'Open', nosw: 1, page: 'market.html?tool=reality' },
+  { id: 'vidslides', cat: 16, icon: '🎞️', name: 'Photo slideshow video', tag: 'Photos to a video with motion and music', run: 'Open', nosw: 1, page: 'video.html?tool=slides' },
+  { id: 'vidtext', cat: 16, icon: '🔤', name: 'Text and quote video', tag: 'Animated text videos for Reels and Shorts', run: 'Open', nosw: 1, page: 'video.html?tool=text' },
+  { id: 'videdit', cat: 16, icon: '✂️', name: 'Video editor', tag: 'Trim, speed, filters, text, logo, compress', run: 'Open', nosw: 1, page: 'video.html?tool=edit' },
+  { id: 'vidgif', cat: 16, icon: '🖼️', name: 'Video to GIF', tag: 'Turn a clip into a GIF', run: 'Open', nosw: 1, page: 'video.html?tool=gif' },
+  { id: 'vidaudio', cat: 16, icon: '🎧', name: 'Extract audio', tag: 'Save the sound from a video', run: 'Open', nosw: 1, page: 'video.html?tool=audio' },
+  { id: 'vidframe', cat: 16, icon: '📷', name: 'Grab a video frame', tag: 'Save any moment as a picture', run: 'Open', nosw: 1, page: 'video.html?tool=frame' }
 ];
